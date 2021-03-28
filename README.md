@@ -1,4 +1,4 @@
-# Protecting Angular using ASP.NET Web API and Active directory
+# Seamless Sign on using ASP.NET Web API, Angular and Active directory
 Simple Login & Logout Single Page Application with Asp.Net Core 3.1 Web API, Angular 8 and Azure Active Directory.
 
 ## General Info

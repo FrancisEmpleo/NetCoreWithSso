@@ -39,6 +39,7 @@ namespace NetCoreSso
                 options.SaveTokens = true;
                 options.SignInScheme = "Cookies";
                 options.Authority = "https://login.microsoftonline.com/bc02ebd1-945f-4a18-a0ed-bb7be1a965cd/v2.0";
+                options.SignedOutCallbackPath = "/logout-callback";
                 options.ClientId = "09a30b4a-52cc-4d67-8bcd-563df798a27a";
                 options.ResponseType = "id_token token";
                 options.Scope.Clear();

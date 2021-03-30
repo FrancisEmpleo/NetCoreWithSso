@@ -15,4 +15,9 @@ export class NavMenuComponent {
   toggle() {
     this.isExpanded = !this.isExpanded;
   }
+
+  logout()
+  {
+    window.location.href = 'https://localhost:5001/external/logout?returnUrl=/lgt-callback';
+  }
 }

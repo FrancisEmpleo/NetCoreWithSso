@@ -4,7 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 using NetCoreSso.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace NetCoreSso.Controllers
@@ -58,7 +60,7 @@ namespace NetCoreSso.Controllers
             // retrieve claims of the external user
             var externalUser = result.Principal;
             if (externalUser == null)
-            {
+            {   
                 throw new Exception("External authentication error");
             }
 
@@ -68,10 +70,27 @@ namespace NetCoreSso.Controllers
             // code to collect access token and id token issued by active directory
             var idToken = result.Properties.GetTokenValue("id_token");
             var accessToken = result.Properties.GetTokenValue("access_token");
+            var username = result.Principal.Claims.Where(x => x.Type == "preferred_username").Select(x => x.Value).FirstOrDefault();
 
             // delete temporary cookie used during external authentication
             await HttpContext.SignOutAsync("Cookies");
 
+            returnUrl += $"?at={accessToken}&un={username}&it={idToken}";
+            return Redirect(returnUrl);
+        }
+
+        [Route("Logout")]
+        [HttpGet]
+        public async Task<IActionResult> Logout(string returnUrl)
+        {
+            returnUrl = $"https://localhost:5001/external/PostLogoutCallback?returnUrl={returnUrl}";
+            return Redirect($"https://login.microsoftonline.com/bc02ebd1-945f-4a18-a0ed-bb7be1a965cd/oauth2/logout?post_logout_redirect_uri={returnUrl}");
+        }
+
+        [Route("PostLogoutCallback")]
+        [HttpGet]
+        public async Task<IActionResult> PostLogoutCallback(string returnUrl)
+        {
             return Redirect(returnUrl);
         }
     }
